@@ -46,7 +46,7 @@ Welcome to my personal portfolio website repository! This website showcases my p
 ## 📬 Contact & Connect
 
 - **Email**: [udiadhahaskaananta@gmail.com](mailto:udiadhahaskaananta@gmail.com)
-- **LinkedIn**: [Udi Adhahaska Arta Ananta](https://www.linkedin.com/in/udi-adhahaska-arta-ananta-64790a312/)
+- **LinkedIn**: [Arta Ananta](https://www.linkedin.com/in/arta-ananta)
 - **GitHub**: [Kyouji-Prinz](https://github.com/Kyouji-Prinz)
 
 ---
