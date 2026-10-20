@@ -5,6 +5,8 @@
 
 Welcome to my personal portfolio website repository! This website showcases my projects, technical skills, background, and downloadable resume.
 
+🔗 **Live Website**: [https://kyouji-prinz.github.io/Porto-Arta/](https://kyouji-prinz.github.io/Porto-Arta/)
+
 ---
 
 ## ✨ Features
@@ -31,11 +33,11 @@ Welcome to my personal portfolio website repository! This website showcases my p
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/<your-username>/<repo-name>.git
+   git clone https://github.com/Kyouji-Prinz/Porto-Arta.git
    ```
 2. Navigate to the folder:
    ```bash
-   cd <repo-name>
+   cd Porto-Arta
    ```
 3. Open `index.html` in your web browser (or use VS Code Live Server).
 
