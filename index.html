@@ -604,7 +604,7 @@
         }
 
         /* ==========================================
-           3D CERTIFICATIONS STYLING
+           CERTIFICATIONS GRID & INTERACTIVE 3D VIEWER
            ========================================== */
         .cert-grid {
             display: grid;
@@ -613,62 +613,34 @@
             margin-top: 2rem;
         }
 
-        .cert-card-3d {
-            perspective: 1200px;
-            height: 100%;
-        }
-
-        .cert-flipper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            min-height: 520px;
-            transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        .cert-card-3d:hover .cert-flipper {
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
-
-        .cert-face {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        /* Stable, Clean Preview Cards (No 3D tilt on grid) */
+        .cert-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 18px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
         }
 
-        .cert-face.cert-front {
-            transform: rotateY(0deg);
-            z-index: 2;
-        }
-
-        .cert-face.cert-back {
-            transform: rotateY(180deg);
-            z-index: 1;
+        .cert-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.09);
+            border-color: rgba(37, 99, 235, 0.4);
         }
 
         .cert-media-wrap {
             position: relative;
             width: 100%;
-            height: 260px;
-            background: rgba(0, 0, 0, 0.05);
+            height: 250px;
+            background: rgba(0, 0, 0, 0.04);
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: zoom-in;
+            cursor: pointer;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -677,24 +649,48 @@
             height: 100%;
             object-fit: cover;
             object-position: top center;
-            transition: transform 0.5s ease;
+            transition: transform 0.4s ease;
         }
 
-        .cert-card-3d:hover .cert-media-wrap img {
-            transform: scale(1.04);
+        .cert-card:hover .cert-media-wrap img {
+            transform: scale(1.03);
         }
 
-        .cert-glare {
+        .cert-hover-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0;
-            transition: opacity 0.3s ease;
-            mix-blend-mode: overlay;
+            transition: opacity 0.25s ease;
             z-index: 3;
+            pointer-events: none;
+        }
+
+        .cert-hover-pill {
+            background: #fff;
+            color: #111;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transform: translateY(6px);
+            transition: transform 0.25s ease;
+        }
+
+        .cert-card:hover .cert-hover-overlay {
+            opacity: 1;
+        }
+
+        .cert-card:hover .cert-hover-pill {
+            transform: translateY(0);
         }
 
         .cert-badge-category {
@@ -731,20 +727,21 @@
             z-index: 4;
         }
 
-        .cert-badge-flip-indicator {
+        .cert-badge-sides {
             position: absolute;
             bottom: 12px;
             right: 12px;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(15, 23, 42, 0.82);
             color: #fff;
-            padding: 0.28rem 0.65rem;
-            border-radius: 6px;
-            font-size: 0.72rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
             font-weight: 600;
             backdrop-filter: blur(6px);
             display: flex;
             align-items: center;
             gap: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             z-index: 4;
             pointer-events: none;
         }
@@ -790,63 +787,48 @@
             border-top: 1px solid var(--border-color);
         }
 
-        .btn-cert-flip {
+        .btn-cert-open {
             background: transparent;
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 0.45rem 0.9rem;
-            border-radius: 8px;
-            font-size: 0.8rem;
+            padding: 0.55rem 1rem;
+            border-radius: 9px;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
+            width: 100%;
+            justify-content: center;
             transition: all 0.2s ease;
         }
 
-        .btn-cert-flip:hover {
-            background: var(--text-main);
-            color: var(--bg-card);
-        }
-
-        .btn-cert-zoom {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 0.45rem 0.85rem;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            margin-left: auto;
-            transition: all 0.2s ease;
-        }
-
-        .btn-cert-zoom:hover {
+        .btn-cert-open:hover {
+            background: #2563eb;
+            color: #fff;
             border-color: #2563eb;
-            color: #2563eb;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
         }
 
-        /* Lightbox Modal */
+        /* ==========================================
+           FULLSCREEN INTERACTIVE 3D CERTIFICATE VIEWER
+           ========================================== */
         .cert-lightbox-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.88);
-            backdrop-filter: blur(12px);
+            background: rgba(10, 13, 20, 0.94);
+            backdrop-filter: blur(14px);
             z-index: 99999;
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding: 1.25rem;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .cert-lightbox-modal.active {
@@ -856,20 +838,22 @@
 
         .cert-lightbox-content {
             position: relative;
-            max-width: 950px;
+            max-width: 1100px;
             width: 100%;
+            height: 92vh;
+            max-height: 880px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
             animation: certZoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes certZoomIn {
-            from { transform: scale(0.92); opacity: 0; }
+            from { transform: scale(0.94); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
 
@@ -877,15 +861,112 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 1.5rem;
+            padding: 0.9rem 1.4rem;
             border-bottom: 1px solid var(--border-color);
             background: var(--bg-card);
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .cert-lightbox-meta {
+            min-width: 0;
+            flex: 1;
         }
 
         .cert-lightbox-title {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 700;
             color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cert-lightbox-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Controls in Header */
+        .cert-toolbar-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 0.3rem 0.55rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .cert-toolbar-controls {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-cert-tool {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-main);
+            width: 32px;
+            height: 32px;
+            border-radius: 7px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: all 0.15s ease;
+        }
+
+        .btn-cert-tool:hover {
+            background: rgba(0, 0, 0, 0.08);
+            border-color: var(--border-color);
+        }
+
+        [data-theme="dark"] .btn-cert-tool:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .cert-zoom-indicator {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-main);
+            min-width: 44px;
+            text-align: center;
+            user-select: none;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .cert-zoom-indicator:hover {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-flip-primary {
+            background: #2563eb;
+            color: #fff;
+            border: 1px solid #1d4ed8;
+            padding: 0.42rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-flip-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
         }
 
         .cert-lightbox-close {
@@ -895,40 +976,176 @@
             color: var(--text-main);
             cursor: pointer;
             line-height: 1;
-            padding: 0 0.5rem;
+            padding: 0 0.4rem;
             border-radius: 6px;
             transition: transform 0.2s ease;
         }
 
         .cert-lightbox-close:hover {
             transform: scale(1.15);
+            color: #ef4444;
         }
 
-        .cert-lightbox-view-area {
-            padding: 1.5rem;
+        /* 3D Viewport Canvas */
+        .cert-lightbox-viewport {
+            position: relative;
+            flex: 1;
+            overflow: hidden;
             display: flex;
-            justify-content: center;
             align-items: center;
-            background: rgba(0, 0, 0, 0.25);
-            max-height: 70vh;
-            overflow: auto;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1e2430 0%, #0e1117 100%);
+            perspective: 1500px;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
         }
 
-        .cert-lightbox-img {
-            max-width: 100%;
-            max-height: 65vh;
+        .cert-lightbox-viewport.is-dragging {
+            cursor: grabbing;
+        }
+
+        .cert-grid-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+        }
+
+        /* Movable Stage (Pan & Scale) */
+        .cert-stage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        /* 3D Paper Sheet (Flippable) */
+        .cert-paper-3d {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.75s cubic-bezier(0.34, 1.25, 0.64, 1);
+        }
+
+        .cert-paper-3d.flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* Orientation helper sizes */
+        .cert-paper-3d.is-portrait {
+            height: min(62vh, 600px);
+            width: calc(min(62vh, 600px) * 0.707);
+        }
+
+        .cert-paper-3d.is-landscape {
+            height: min(58vh, 520px);
+            width: calc(min(58vh, 520px) * 1.414);
+        }
+
+        @media (max-width: 768px) {
+            .cert-paper-3d.is-portrait {
+                width: 82vw;
+                height: calc(82vw / 0.707);
+                max-height: 60vh;
+            }
+            .cert-paper-3d.is-landscape {
+                width: 88vw;
+                height: calc(88vw / 1.414);
+                max-height: 55vh;
+            }
+            .cert-toolbar-controls {
+                gap: 0.2rem;
+            }
+        }
+
+        .cert-paper-face {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), 0 3px 10px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cert-paper-front {
+            transform: rotateY(0deg);
+            z-index: 2;
+        }
+
+        .cert-paper-back {
+            transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        .cert-paper-face img {
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: block;
+            pointer-events: none;
         }
 
+        /* Footer */
         .cert-lightbox-footer {
-            padding: 0.85rem 1.5rem;
+            padding: 0.75rem 1.4rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-top: 1px solid var(--border-color);
             background: var(--bg-card);
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .cert-page-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-tab-pill {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-tab-pill.active {
+            background: var(--text-main);
+            color: var(--bg-card);
+            border-color: var(--text-main);
+        }
+
+        .cert-hint-text {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (max-width: 640px) {
+            .cert-hint-text {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -1260,181 +1477,121 @@
                         <span class="lang-id">Pencapaian terverifikasi dalam analisis data, magang industri, kompetensi multimedia, dan komunikasi.</span>
                     </p>
                     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem;">
-                        💡 <span class="lang-en">Hover to interact in 3D. Click <strong>Flip</strong> on 2-sided cards to see transcripts, or click image to enlarge.</span>
-                        <span class="lang-id">Gerakkan kursor untuk efek 3D. Klik tombol <strong>Balik</strong> pada sertifikat bolak-balik untuk melihat nilai, atau klik gambar untuk memperbesar.</span>
+                        💡 <span class="lang-en">Click on any certificate to open the <strong>Interactive 3D Viewer</strong> (Zoom, Pan & Smooth 3D Flip).</span>
+                        <span class="lang-id">Klik sertifikat untuk membuka <strong>Viewer Interaktif 3D</strong> (Bisa diperbesar, digeser, dan dibalik dengan animasi 3D).</span>
                     </p>
 
                     <div class="cert-grid">
                         <!-- CERTIFICATE 1: Data Analyst UB (Landscape) -->
-                        <div class="cert-card-3d">
-                            <div class="cert-flipper">
-                                <div class="cert-face cert-front">
-                                    <div class="cert-media-wrap" onclick="openCertLightbox('Sertif/Certif_Data_Analyst.jpg', 'Data Analyst - DSAREA x Jobarea.id', 'Grade A (Memuaskan)')">
-                                        <div class="cert-glare"></div>
-                                        <span class="cert-badge-category">Data Science</span>
-                                        <span class="cert-badge-grade">Grade A</span>
-                                        <img src="Sertif/Certif_Data_Analyst.jpg" alt="Data Analyst Certificate" loading="lazy">
+                        <div class="cert-card">
+                            <div class="cert-media-wrap" onclick="openCertViewer('Sertif/Certif_Data_Analyst.jpg', 'Data Analyst Certification', 'DSAREA x Jobarea.id • Grade A (85-100)', null, 'landscape')">
+                                <span class="cert-badge-category">Data Science</span>
+                                <span class="cert-badge-grade">Grade A</span>
+                                <img src="Sertif/Certif_Data_Analyst.jpg" alt="Data Analyst Certificate" loading="lazy">
+                                <div class="cert-hover-overlay">
+                                    <div class="cert-hover-pill">
+                                        🔍 <span class="lang-en">Open 3D Viewer</span><span class="lang-id">Buka Viewer 3D</span>
                                     </div>
-                                    <div class="cert-body">
-                                        <div class="cert-issuer-row">
-                                            <span>DSAREA x Jobarea.id</span>
-                                            <span>May 2025</span>
-                                        </div>
-                                        <h3 class="cert-title">Data Analyst Certification</h3>
-                                        <p class="cert-desc lang-en">Completed intensive professional Data Analyst training with an <strong>A Grade (85-100)</strong>, demonstrating mastery in exploratory data analysis, business metric interpretation, and actionable reporting.</p>
-                                        <p class="cert-desc lang-id">Menyelesaikan pelatihan Data Analyst intensif dengan <strong>Predikat A (85-100 / Memuaskan)</strong>, menguasai exploratory data analysis, interpretasi metrik bisnis, dan visualisasi laporan.</p>
-                                        <div class="cert-actions">
-                                            <button type="button" class="btn-cert-zoom" onclick="openCertLightbox('Sertif/Certif_Data_Analyst.jpg', 'Data Analyst - DSAREA x Jobarea.id', 'Grade A')">
-                                                🔍 <span class="lang-en">Enlarge</span><span class="lang-id">Perbesar</span>
-                                            </button>
-                                        </div>
-                                    </div>
+                                </div>
+                            </div>
+                            <div class="cert-body">
+                                <div class="cert-issuer-row">
+                                    <span>DSAREA x Jobarea.id</span>
+                                    <span>May 2025</span>
+                                </div>
+                                <h3 class="cert-title">Data Analyst Certification</h3>
+                                <p class="cert-desc lang-en">Completed intensive professional Data Analyst training with an <strong>A Grade (85-100)</strong>, demonstrating mastery in exploratory data analysis, business metric interpretation, and actionable reporting.</p>
+                                <p class="cert-desc lang-id">Menyelesaikan pelatihan Data Analyst intensif dengan <strong>Predikat A (85-100 / Memuaskan)</strong>, menguasai exploratory data analysis, interpretasi metrik bisnis, dan visualisasi laporan.</p>
+                                <div class="cert-actions">
+                                    <button type="button" class="btn-cert-open" onclick="openCertViewer('Sertif/Certif_Data_Analyst.jpg', 'Data Analyst Certification', 'DSAREA x Jobarea.id • Grade A (85-100)', null, 'landscape')">
+                                        🔍 <span class="lang-en">View Certificate (3D View)</span><span class="lang-id">Buka Sertifikat (3D View)</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- CERTIFICATE 2: Asa Desain PKL (2-Sided, Portrait) -->
-                        <div class="cert-card-3d">
-                            <div class="cert-flipper" id="flipper-asa">
-                                <!-- FRONT -->
-                                <div class="cert-face cert-front">
-                                    <div class="cert-media-wrap" onclick="openCertLightbox('Sertif/Certif_Asa_Desain_Front.jpg', 'PKL ASA Design Architect (Cover)', 'Skor 93 (Sangat Baik)', 'Sertif/Certif_Asa_Desain_Back.jpg')">
-                                        <div class="cert-glare"></div>
-                                        <span class="cert-badge-category">Industry Internship</span>
-                                        <span class="cert-badge-grade">Skor 93</span>
-                                        <span class="cert-badge-flip-indicator">🔄 2 Sisi</span>
-                                        <img src="Sertif/Certif_Asa_Desain_Front.jpg" alt="ASA Design PKL Certificate Cover" loading="lazy">
-                                    </div>
-                                    <div class="cert-body">
-                                        <div class="cert-issuer-row">
-                                            <span>ASA Design Architect</span>
-                                            <span>Mar - Jun 2023</span>
-                                        </div>
-                                        <h3 class="cert-title">Praktik Kerja Lapangan (PKL 4 Bulan)</h3>
-                                        <p class="cert-desc lang-en">4-month professional industry internship in IT & Multimedia with an overall score of <strong>93 (Sangat Baik)</strong>, achieving top marks (98) in productivity and tool execution.</p>
-                                        <p class="cert-desc lang-id">Magang industri selama 4 bulan di bidang IT & Multimedia dengan predikat <strong>Sangat Baik (Skor 93)</strong>, meraih nilai 98 pada produktivitas dan penyelesaian tugas kerja.</p>
-                                        <div class="cert-actions">
-                                            <button type="button" class="btn-cert-flip" onclick="toggleCardFlip('flipper-asa')">
-                                                🔄 <span class="lang-en">Flip to Grades</span><span class="lang-id">Lihat Nilai</span>
-                                            </button>
-                                            <button type="button" class="btn-cert-zoom" onclick="openCertLightbox('Sertif/Certif_Asa_Desain_Front.jpg', 'PKL ASA Design Architect', 'Skor 93', 'Sertif/Certif_Asa_Desain_Back.jpg')">
-                                                🔍 <span class="lang-en">Enlarge</span><span class="lang-id">Perbesar</span>
-                                            </button>
-                                        </div>
+                        <div class="cert-card">
+                            <div class="cert-media-wrap" onclick="openCertViewer('Sertif/Certif_Asa_Desain_Front.jpg', 'Praktik Kerja Lapangan (PKL)', 'ASA Design Architect • Skor 93 (Sangat Baik)', 'Sertif/Certif_Asa_Desain_Back.jpg', 'portrait')">
+                                <span class="cert-badge-category">Industry Internship</span>
+                                <span class="cert-badge-grade">Skor 93</span>
+                                <span class="cert-badge-sides">📄 2 Sisi</span>
+                                <img src="Sertif/Certif_Asa_Desain_Front.jpg" alt="ASA Design PKL Certificate Cover" loading="lazy">
+                                <div class="cert-hover-overlay">
+                                    <div class="cert-hover-pill">
+                                        🔍 <span class="lang-en">Open 3D Viewer</span><span class="lang-id">Buka Viewer 3D</span>
                                     </div>
                                 </div>
-                                <!-- BACK -->
-                                <div class="cert-face cert-back">
-                                    <div class="cert-media-wrap" onclick="openCertLightbox('Sertif/Certif_Asa_Desain_Back.jpg', 'PKL ASA Design Architect (Transkrip Nilai)', 'Skor 93 (Sangat Baik)', 'Sertif/Certif_Asa_Desain_Front.jpg')">
-                                        <div class="cert-glare"></div>
-                                        <span class="cert-badge-category">Transkrip Nilai</span>
-                                        <span class="cert-badge-grade">Rata-rata 93</span>
-                                        <img src="Sertif/Certif_Asa_Desain_Back.jpg" alt="ASA Design PKL Grade Transcript" loading="lazy">
-                                    </div>
-                                    <div class="cert-body">
-                                        <div class="cert-issuer-row">
-                                            <span>Rincian Penilaian PKL</span>
-                                            <span>9 Aspek Penilaian</span>
-                                        </div>
-                                        <h3 class="cert-title">Transkrip Nilai Industri</h3>
-                                        <p class="cert-desc lang-en">Detailed evaluation: Penampilan (98), Produktivitas (98), Penguasaan Alat Kerja (95), Keilmuan (95), Inovasi & Kreativitas (92). Signed by Pembimbing & Direktur.</p>
-                                        <p class="cert-desc lang-id">Rincian nilai: Produktivitas & Tugas (98), Penguasaan Alat (95), Keilmuan (95), Sikap & Integritas (92-98). Ditandatangani Pembimbing Industri & Direktur.</p>
-                                        <div class="cert-actions">
-                                            <button type="button" class="btn-cert-flip" onclick="toggleCardFlip('flipper-asa')">
-                                                🔄 <span class="lang-en">Flip to Cover</span><span class="lang-id">Lihat Cover</span>
-                                            </button>
-                                            <button type="button" class="btn-cert-zoom" onclick="openCertLightbox('Sertif/Certif_Asa_Desain_Back.jpg', 'PKL ASA Design Architect (Transkrip Nilai)', 'Skor 93', 'Sertif/Certif_Asa_Desain_Front.jpg')">
-                                                🔍 <span class="lang-en">Enlarge</span><span class="lang-id">Perbesar</span>
-                                            </button>
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="cert-body">
+                                <div class="cert-issuer-row">
+                                    <span>ASA Design Architect</span>
+                                    <span>Mar - Jun 2023</span>
+                                </div>
+                                <h3 class="cert-title">Praktik Kerja Lapangan (PKL 4 Bulan)</h3>
+                                <p class="cert-desc lang-en">4-month professional industry internship in IT & Multimedia with an overall score of <strong>93 (Sangat Baik)</strong>, achieving top marks (98) in productivity and tool execution.</p>
+                                <p class="cert-desc lang-id">Magang industri selama 4 bulan di bidang IT & Multimedia dengan predikat <strong>Sangat Baik (Skor 93)</strong>, meraih nilai 98 pada produktivitas dan penyelesaian tugas kerja.</p>
+                                <div class="cert-actions">
+                                    <button type="button" class="btn-cert-open" onclick="openCertViewer('Sertif/Certif_Asa_Desain_Front.jpg', 'Praktik Kerja Lapangan (PKL)', 'ASA Design Architect • Skor 93 (Sangat Baik)', 'Sertif/Certif_Asa_Desain_Back.jpg', 'portrait')">
+                                        🔄 <span class="lang-en">View & 3D Flip (2 Sisi)</span><span class="lang-id">Buka & Balik 3D (2 Sisi)</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- CERTIFICATE 3: UKK Multimedia SMK (2-Sided, Landscape) -->
-                        <div class="cert-card-3d">
-                            <div class="cert-flipper" id="flipper-ukk">
-                                <!-- FRONT -->
-                                <div class="cert-face cert-front">
-                                    <div class="cert-media-wrap" onclick="openCertLightbox('Sertif/Certif_Competency_Multimedia_Front.jpg', 'UKK Multimedia (Cover)', 'Predikat Kompeten (88)', 'Sertif/Certif_Competency_Multimedia_Back.jpg')">
-                                        <div class="cert-glare"></div>
-                                        <span class="cert-badge-category">Vocational UKK</span>
-                                        <span class="cert-badge-grade">Kompeten (88)</span>
-                                        <span class="cert-badge-flip-indicator">🔄 2 Sisi</span>
-                                        <img src="Sertif/Certif_Competency_Multimedia_Front.jpg" alt="UKK Multimedia Certificate Cover" loading="lazy">
-                                    </div>
-                                    <div class="cert-body">
-                                        <div class="cert-issuer-row">
-                                            <span>Zona Grafika Multikarya</span>
-                                            <span>Maret 2024</span>
-                                        </div>
-                                        <h3 class="cert-title">Certificate of Competency (UKK)</h3>
-                                        <p class="cert-desc lang-en">National vocational competency qualification in Multimedia (KKNI Level 2/3) accredited with industry partners, certified as <strong>KOMPETEN (Score 88)</strong>.</p>
-                                        <p class="cert-desc lang-id">Sertifikasi Uji Kompetensi Keahlian (UKK) nasional jenjang SMK bidang Multimedia terakreditasi bersama mitra DUDI dengan predikat <strong>KOMPETEN (Nilai 88)</strong>.</p>
-                                        <div class="cert-actions">
-                                            <button type="button" class="btn-cert-flip" onclick="toggleCardFlip('flipper-ukk')">
-                                                🔄 <span class="lang-en">Flip to Grades</span><span class="lang-id">Lihat Nilai</span>
-                                            </button>
-                                            <button type="button" class="btn-cert-zoom" onclick="openCertLightbox('Sertif/Certif_Competency_Multimedia_Front.jpg', 'UKK Multimedia', 'Predikat Kompeten', 'Sertif/Certif_Competency_Multimedia_Back.jpg')">
-                                                🔍 <span class="lang-en">Enlarge</span><span class="lang-id">Perbesar</span>
-                                            </button>
-                                        </div>
+                        <div class="cert-card">
+                            <div class="cert-media-wrap" onclick="openCertViewer('Sertif/Certif_Competency_Multimedia_Front.jpg', 'Certificate of Competency (UKK Multimedia)', 'SMKN 1 Jombang & Zona Grafika • Predikat Kompeten (88)', 'Sertif/Certif_Competency_Multimedia_Back.jpg', 'landscape')">
+                                <span class="cert-badge-category">Vocational UKK</span>
+                                <span class="cert-badge-grade">Kompeten (88)</span>
+                                <span class="cert-badge-sides">📄 2 Sisi</span>
+                                <img src="Sertif/Certif_Competency_Multimedia_Front.jpg" alt="UKK Multimedia Certificate Cover" loading="lazy">
+                                <div class="cert-hover-overlay">
+                                    <div class="cert-hover-pill">
+                                        🔍 <span class="lang-en">Open 3D Viewer</span><span class="lang-id">Buka Viewer 3D</span>
                                     </div>
                                 </div>
-                                <!-- BACK -->
-                                <div class="cert-face cert-back">
-                                    <div class="cert-media-wrap" onclick="openCertLightbox('Sertif/Certif_Competency_Multimedia_Back.jpg', 'UKK Multimedia (Daftar Nilai)', 'Nilai Akhir: 88', 'Sertif/Certif_Competency_Multimedia_Front.jpg')">
-                                        <div class="cert-glare"></div>
-                                        <span class="cert-badge-category">Daftar Nilai UKK</span>
-                                        <span class="cert-badge-grade">Nilai Akhir: 88</span>
-                                        <img src="Sertif/Certif_Competency_Multimedia_Back.jpg" alt="UKK Multimedia Grade Sheet" loading="lazy">
-                                    </div>
-                                    <div class="cert-body">
-                                        <div class="cert-issuer-row">
-                                            <span>SMKN 1 Jombang</span>
-                                            <span>Maret 2024</span>
-                                        </div>
-                                        <h3 class="cert-title">Daftar Nilai Ujian Kompetensi</h3>
-                                        <p class="cert-desc lang-en">Assessed competencies: digital photography, HD video shooting, software graphics, digital video editing, typography, audio mixing, and digital promotional video rendering.</p>
-                                        <p class="cert-desc lang-id">Kompetensi yang diuji: kamera digital & HD video, software grafik, editing video & audio, fotografi digital, tipografi, dan perancangan video promosi daerah.</p>
-                                        <div class="cert-actions">
-                                            <button type="button" class="btn-cert-flip" onclick="toggleCardFlip('flipper-ukk')">
-                                                🔄 <span class="lang-en">Flip to Cover</span><span class="lang-id">Lihat Cover</span>
-                                            </button>
-                                            <button type="button" class="btn-cert-zoom" onclick="openCertLightbox('Sertif/Certif_Competency_Multimedia_Back.jpg', 'UKK Multimedia (Daftar Nilai)', 'Nilai 88', 'Sertif/Certif_Competency_Multimedia_Front.jpg')">
-                                                🔍 <span class="lang-en">Enlarge</span><span class="lang-id">Perbesar</span>
-                                            </button>
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="cert-body">
+                                <div class="cert-issuer-row">
+                                    <span>Zona Grafika Multikarya</span>
+                                    <span>Maret 2024</span>
+                                </div>
+                                <h3 class="cert-title">Certificate of Competency (UKK)</h3>
+                                <p class="cert-desc lang-en">National vocational competency qualification in Multimedia (KKNI Level 2/3) accredited with industry partners, certified as <strong>KOMPETEN (Score 88)</strong>.</p>
+                                <p class="cert-desc lang-id">Sertifikasi Uji Kompetensi Keahlian (UKK) nasional jenjang SMK bidang Multimedia terakreditasi bersama mitra DUDI dengan predikat <strong>KOMPETEN (Nilai 88)</strong>.</p>
+                                <div class="cert-actions">
+                                    <button type="button" class="btn-cert-open" onclick="openCertViewer('Sertif/Certif_Competency_Multimedia_Front.jpg', 'Certificate of Competency (UKK Multimedia)', 'SMKN 1 Jombang & Zona Grafika • Predikat Kompeten (88)', 'Sertif/Certif_Competency_Multimedia_Back.jpg', 'landscape')">
+                                        🔄 <span class="lang-en">View & 3D Flip (2 Sisi)</span><span class="lang-id">Buka & Balik 3D (2 Sisi)</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- CERTIFICATE 4: English Camp Gwynfor Pare (Portrait) -->
-                        <div class="cert-card-3d">
-                            <div class="cert-flipper">
-                                <div class="cert-face cert-front">
-                                    <div class="cert-media-wrap" onclick="openCertLightbox('Sertif/Certif_English.jpg', 'English Camp - Gwynfor Pare', 'Grade B (82)')">
-                                        <div class="cert-glare"></div>
-                                        <span class="cert-badge-category">Communication</span>
-                                        <span class="cert-badge-grade">Grade B (82)</span>
-                                        <img src="Sertif/Certif_English.jpg" alt="English Camp Certificate" loading="lazy">
+                        <div class="cert-card">
+                            <div class="cert-media-wrap" onclick="openCertViewer('Sertif/Certif_English.jpg', 'English Camp Program', 'Gwynfor Pare • Grade B (Very Good - Skor 82)', null, 'portrait')">
+                                <span class="cert-badge-category">Communication</span>
+                                <span class="cert-badge-grade">Grade B (82)</span>
+                                <img src="Sertif/Certif_English.jpg" alt="English Camp Certificate" loading="lazy">
+                                <div class="cert-hover-overlay">
+                                    <div class="cert-hover-pill">
+                                        🔍 <span class="lang-en">Open 3D Viewer</span><span class="lang-id">Buka Viewer 3D</span>
                                     </div>
-                                    <div class="cert-body">
-                                        <div class="cert-issuer-row">
-                                            <span>Kampung Inggris Pare</span>
-                                            <span>Januari 2019</span>
-                                        </div>
-                                        <h3 class="cert-title">English Camp Program</h3>
-                                        <p class="cert-desc lang-en">Completed an intensive residential English Camp program at Kampung Inggris Pare with <strong>Grade B (Very Good - 82)</strong>, building strong fundamentals in active spoken communication and listening comprehension.</p>
-                                        <p class="cert-desc lang-id">Menyelesaikan program pelatihan intensif English Camp di Kampung Inggris Pare dengan <strong>Grade B (Very Good - Skor 82)</strong>, melatih kemampuan percakapan aktif dan pemahaman bahasa global.</p>
-                                        <div class="cert-actions">
-                                            <button type="button" class="btn-cert-zoom" onclick="openCertLightbox('Sertif/Certif_English.jpg', 'English Camp - Gwynfor Pare', 'Grade B (82)')">
-                                                🔍 <span class="lang-en">Enlarge</span><span class="lang-id">Perbesar</span>
-                                            </button>
-                                        </div>
-                                    </div>
+                                </div>
+                            </div>
+                            <div class="cert-body">
+                                <div class="cert-issuer-row">
+                                    <span>Kampung Inggris Pare</span>
+                                    <span>Januari 2019</span>
+                                </div>
+                                <h3 class="cert-title">English Camp Program</h3>
+                                <p class="cert-desc lang-en">Completed an intensive residential English Camp program at Kampung Inggris Pare with <strong>Grade B (Very Good - 82)</strong>, building strong fundamentals in active spoken communication and listening comprehension.</p>
+                                <p class="cert-desc lang-id">Menyelesaikan program pelatihan intensif English Camp di Kampung Inggris Pare dengan <strong>Grade B (Very Good - Skor 82)</strong>, melatih kemampuan percakapan aktif dan pemahaman bahasa global.</p>
+                                <div class="cert-actions">
+                                    <button type="button" class="btn-cert-open" onclick="openCertViewer('Sertif/Certif_English.jpg', 'English Camp Program', 'Gwynfor Pare • Grade B (Very Good - Skor 82)', null, 'portrait')">
+                                        🔍 <span class="lang-en">View Certificate (3D View)</span><span class="lang-id">Buka Sertifikat (3D View)</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1450,29 +1607,62 @@
         </div>
     </div>
 
-    <!-- CERTIFICATE LIGHTBOX MODAL -->
-    <div id="cert-lightbox" class="cert-lightbox-modal" onclick="if(event.target === this) closeCertLightbox()">
+    <!-- CERTIFICATE INTERACTIVE 3D VIEWER MODAL -->
+    <div id="cert-lightbox" class="cert-lightbox-modal" onclick="if(event.target === this) closeCertViewer()">
         <div class="cert-lightbox-content">
+            <!-- HEADER -->
             <div class="cert-lightbox-header">
-                <div>
+                <div class="cert-lightbox-meta">
                     <div id="lightbox-title" class="cert-lightbox-title">Certificate Title</div>
-                    <div id="lightbox-subtitle" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">Subtitle</div>
+                    <div id="lightbox-subtitle" class="cert-lightbox-subtitle">Subtitle Info</div>
                 </div>
-                <button type="button" class="cert-lightbox-close" onclick="closeCertLightbox()">&times;</button>
+
+                <!-- CONTROLS TOOLBAR -->
+                <div class="cert-toolbar-controls">
+                    <button type="button" class="btn-cert-tool" id="btn-zoom-out" title="Perkecil (Zoom Out)" onclick="zoomCert(-0.25)">−</button>
+                    <div class="cert-zoom-indicator" id="cert-zoom-level" title="Klik untuk Reset Zoom" onclick="resetCertView()">100%</div>
+                    <button type="button" class="btn-cert-tool" id="btn-zoom-in" title="Perbesar (Zoom In)" onclick="zoomCert(0.25)">+</button>
+                    <button type="button" class="btn-cert-tool" id="btn-reset-view" title="Reset Posisi & Zoom" onclick="resetCertView()">↺</button>
+                    <button type="button" class="btn-flip-primary" id="btn-modal-flip" style="display: none;" onclick="flipCert3D()">
+                        <span>🔄</span> <span class="lang-en">Flip 3D</span><span class="lang-id">Balik 3D</span>
+                    </button>
+                </div>
+
+                <button type="button" class="cert-lightbox-close" onclick="closeCertViewer()" title="Tutup (Esc)">&times;</button>
             </div>
-            <div class="cert-lightbox-view-area">
-                <img id="lightbox-img" class="cert-lightbox-img" src="" alt="Certificate Zoom">
+
+            <!-- VIEWPORT CANVAS -->
+            <div class="cert-lightbox-viewport" id="cert-viewport">
+                <div class="cert-grid-pattern"></div>
+                <div class="cert-stage" id="cert-stage">
+                    <div class="cert-paper-3d is-landscape" id="cert-paper-3d">
+                        <!-- FRONT FACE -->
+                        <div class="cert-paper-face cert-paper-front">
+                            <img id="cert-img-front" src="" alt="Front Certificate">
+                        </div>
+                        <!-- BACK FACE -->
+                        <div class="cert-paper-face cert-paper-back">
+                            <img id="cert-img-back" src="" alt="Back Certificate">
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- FOOTER -->
             <div class="cert-lightbox-footer">
-                <div id="lightbox-page-toggle" style="display: none; gap: 0.6rem;">
-                    <button type="button" id="btn-lightbox-front" class="btn-cert-flip" style="background: var(--text-main); color: var(--bg-card);" onclick="switchLightboxPage('front')">
-                        <span class="lang-en">Front Cover</span><span class="lang-id">Halaman Depan</span>
+                <div class="cert-page-tabs" id="lightbox-page-tabs" style="display: none;">
+                    <button type="button" id="tab-btn-front" class="btn-tab-pill active" onclick="flipCert3D('front')">
+                        📄 <span class="lang-en">Front Cover</span><span class="lang-id">Halaman Depan</span>
                     </button>
-                    <button type="button" id="btn-lightbox-back" class="btn-cert-flip" onclick="switchLightboxPage('back')">
-                        <span class="lang-en">Grades Transcript</span><span class="lang-id">Transkrip Nilai</span>
+                    <button type="button" id="tab-btn-back" class="btn-tab-pill" onclick="flipCert3D('back')">
+                        📊 <span class="lang-en">Grades Transcript</span><span class="lang-id">Transkrip Nilai</span>
                     </button>
                 </div>
-                <button type="button" class="btn-cert-zoom" onclick="closeCertLightbox()" style="margin-left: auto;">
+                <div class="cert-hint-text">
+                    💡 <span class="lang-en">Drag to pan • Scroll / +/- to zoom • Double click to toggle • Click Flip for 3D animation</span>
+                    <span class="lang-id">Drag untuk geser • Scroll / +/- untuk zoom • Klik dua kali toggle zoom • Klik Balik untuk rotasi 3D</span>
+                </div>
+                <button type="button" class="btn-tab-pill" onclick="closeCertViewer()" style="margin-left: auto;">
                     <span class="lang-en">Close</span><span class="lang-id">Tutup</span>
                 </button>
             </div>
@@ -1798,114 +1988,228 @@
         introScreen.addEventListener("click", enterSite);
         document.addEventListener("keydown", enterSite, { once: true });
 
-        // 6. 3D Tilt, Flip & Lightbox Logic for Certifications
-        const certCards = document.querySelectorAll('.cert-card-3d');
-        certCards.forEach(card => {
-            const flipper = card.querySelector('.cert-flipper');
-            const glares = card.querySelectorAll('.cert-glare');
+        // 6. Interactive 3D Certificate Viewer (Zoom, Pan & 3D Animated Flip)
+        let certZoom = 1;
+        let certPanX = 0;
+        let certPanY = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let isFlipped = false;
+        let hasBackPage = false;
+        let currentFrontUrl = '';
+        let currentBackUrl = '';
 
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-
-                const rotateX = ((y - centerY) / centerY) * -12;
-                const rotateY = ((x - centerX) / centerX) * 12;
-
-                const isFlipped = flipper.classList.contains('is-flipped');
-                const baseRotateY = isFlipped ? 180 : 0;
-
-                flipper.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${(baseRotateY + rotateY).toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
-
-                glares.forEach(glare => {
-                    glare.style.opacity = '0.4';
-                    glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 65%)`;
-                });
-            });
-
-            card.addEventListener('mouseleave', () => {
-                const isFlipped = flipper.classList.contains('is-flipped');
-                const baseRotateY = isFlipped ? 180 : 0;
-                flipper.style.transform = `perspective(1000px) rotateX(0deg) rotateY(${baseRotateY}deg) scale3d(1, 1, 1)`;
-                glares.forEach(glare => {
-                    glare.style.opacity = '0';
-                });
-            });
-        });
-
-        window.toggleCardFlip = function(flipperId) {
-            const flipper = document.getElementById(flipperId);
-            if (!flipper) return;
-            flipper.classList.toggle('is-flipped');
-            const isFlipped = flipper.classList.contains('is-flipped');
-            flipper.style.transform = isFlipped ? 'perspective(1000px) rotateY(180deg)' : 'perspective(1000px) rotateY(0deg)';
-        };
-
-        // Lightbox state
-        let currentLightboxFront = '';
-        let currentLightboxBack = '';
-
-        window.openCertLightbox = function(imgSrc, title, subtitle, backSrc = null) {
-            const modal = document.getElementById('cert-lightbox');
-            const modalImg = document.getElementById('lightbox-img');
-            const modalTitle = document.getElementById('lightbox-title');
-            const modalSub = document.getElementById('lightbox-subtitle');
-            const toggleDiv = document.getElementById('lightbox-page-toggle');
-            const btnFront = document.getElementById('btn-lightbox-front');
-            const btnBack = document.getElementById('btn-lightbox-back');
-
-            currentLightboxFront = imgSrc;
-            currentLightboxBack = backSrc;
-
-            modalImg.src = imgSrc;
-            modalTitle.textContent = title;
-            modalSub.textContent = subtitle;
-
-            if (backSrc) {
-                toggleDiv.style.display = 'flex';
-                btnFront.style.background = 'var(--text-main)';
-                btnFront.style.color = 'var(--bg-card)';
-                btnBack.style.background = 'transparent';
-                btnBack.style.color = 'var(--text-main)';
+        function updateCertTransform(animate = false) {
+            const stage = document.getElementById('cert-stage');
+            const zoomText = document.getElementById('cert-zoom-level');
+            if (!stage) return;
+            if (animate) {
+                stage.style.transition = 'transform 0.22s cubic-bezier(0.2, 0, 0, 1)';
             } else {
-                toggleDiv.style.display = 'none';
+                stage.style.transition = 'none';
+            }
+            stage.style.transform = `translate(${certPanX}px, ${certPanY}px) scale(${certZoom})`;
+            if (zoomText) {
+                zoomText.textContent = `${Math.round(certZoom * 100)}%`;
+            }
+        }
+
+        window.openCertViewer = function(frontSrc, title, subtitle, backSrc = null, orientation = 'landscape') {
+            const modal = document.getElementById('cert-lightbox');
+            const titleEl = document.getElementById('lightbox-title');
+            const subEl = document.getElementById('lightbox-subtitle');
+            const imgFront = document.getElementById('cert-img-front');
+            const imgBack = document.getElementById('cert-img-back');
+            const paper = document.getElementById('cert-paper-3d');
+            const flipBtn = document.getElementById('btn-modal-flip');
+            const tabsDiv = document.getElementById('lightbox-page-tabs');
+            const tabFront = document.getElementById('tab-btn-front');
+            const tabBack = document.getElementById('tab-btn-back');
+
+            currentFrontUrl = frontSrc;
+            currentBackUrl = backSrc;
+            hasBackPage = !!backSrc;
+            isFlipped = false;
+
+            // Reset pan and zoom
+            certZoom = 1;
+            certPanX = 0;
+            certPanY = 0;
+            updateCertTransform(false);
+
+            // Set images and metadata
+            imgFront.src = frontSrc;
+            if (backSrc) {
+                imgBack.src = backSrc;
+            } else {
+                imgBack.src = '';
+            }
+
+            titleEl.textContent = title;
+            subEl.textContent = subtitle;
+
+            // Set paper orientation
+            paper.classList.remove('is-portrait', 'is-landscape', 'flipped');
+            if (orientation === 'portrait') {
+                paper.classList.add('is-portrait');
+            } else {
+                paper.classList.add('is-landscape');
+            }
+
+            // Show or hide 3D flip controls
+            if (hasBackPage) {
+                flipBtn.style.display = 'inline-flex';
+                tabsDiv.style.display = 'flex';
+                tabFront.classList.add('active');
+                tabBack.classList.remove('active');
+            } else {
+                flipBtn.style.display = 'none';
+                tabsDiv.style.display = 'none';
             }
 
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         };
 
-        window.switchLightboxPage = function(page) {
-            const modalImg = document.getElementById('lightbox-img');
-            const btnFront = document.getElementById('btn-lightbox-front');
-            const btnBack = document.getElementById('btn-lightbox-back');
+        // Backward compatibility alias
+        window.openCertLightbox = function(frontSrc, title, subtitle, backSrc = null) {
+            window.openCertViewer(frontSrc, title, subtitle, backSrc, 'landscape');
+        };
 
-            if (page === 'front') {
-                modalImg.src = currentLightboxFront;
-                btnFront.style.background = 'var(--text-main)';
-                btnFront.style.color = 'var(--bg-card)';
-                btnBack.style.background = 'transparent';
-                btnBack.style.color = 'var(--text-main)';
-            } else if (page === 'back' && currentLightboxBack) {
-                modalImg.src = currentLightboxBack;
-                btnBack.style.background = 'var(--text-main)';
-                btnBack.style.color = 'var(--bg-card)';
-                btnFront.style.background = 'transparent';
-                btnFront.style.color = 'var(--text-main)';
+        window.flipCert3D = function(forceSide = null) {
+            if (!hasBackPage) return;
+            const paper = document.getElementById('cert-paper-3d');
+            const tabFront = document.getElementById('tab-btn-front');
+            const tabBack = document.getElementById('tab-btn-back');
+
+            if (forceSide === 'front') {
+                isFlipped = false;
+            } else if (forceSide === 'back') {
+                isFlipped = true;
+            } else {
+                isFlipped = !isFlipped;
+            }
+
+            if (isFlipped) {
+                paper.classList.add('flipped');
+                if (tabBack) tabBack.classList.add('active');
+                if (tabFront) tabFront.classList.remove('active');
+            } else {
+                paper.classList.remove('flipped');
+                if (tabFront) tabFront.classList.add('active');
+                if (tabBack) tabBack.classList.remove('active');
             }
         };
 
-        window.closeCertLightbox = function() {
+        window.zoomCert = function(delta) {
+            const nextZoom = Math.min(Math.max(certZoom + delta, 0.5), 3.5);
+            certZoom = parseFloat(nextZoom.toFixed(2));
+            updateCertTransform(true);
+        };
+
+        window.resetCertView = function() {
+            certZoom = 1;
+            certPanX = 0;
+            certPanY = 0;
+            updateCertTransform(true);
+        };
+
+        window.closeCertViewer = function() {
             const modal = document.getElementById('cert-lightbox');
-            modal.classList.remove('active');
+            if (modal) {
+                modal.classList.remove('active');
+            }
             document.body.style.overflow = 'auto';
         };
 
+        window.closeCertLightbox = window.closeCertViewer;
+
+        // Viewport Drag and Wheel interactions
+        const certViewport = document.getElementById('cert-viewport');
+        if (certViewport) {
+            // MOUSE DRAG (PAN)
+            certViewport.addEventListener('mousedown', (e) => {
+                if (e.target.closest('button') || e.target.closest('.cert-toolbar-controls')) return;
+                isDragging = true;
+                dragStartX = e.clientX - certPanX;
+                dragStartY = e.clientY - certPanY;
+                certViewport.classList.add('is-dragging');
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                certPanX = e.clientX - dragStartX;
+                certPanY = e.clientY - dragStartY;
+                updateCertTransform(false);
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    certViewport.classList.remove('is-dragging');
+                }
+            });
+
+            // MOUSE WHEEL ZOOM
+            certViewport.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaY < 0 ? 0.2 : -0.2;
+                zoomCert(delta);
+            }, { passive: false });
+
+            // DOUBLE CLICK TO TOGGLE ZOOM
+            certViewport.addEventListener('dblclick', (e) => {
+                if (e.target.closest('button')) return;
+                if (certZoom > 1.15) {
+                    resetCertView();
+                } else {
+                    certZoom = 1.75;
+                    updateCertTransform(true);
+                }
+            });
+
+            // TOUCH SUPPORT (Mobile & Tablet)
+            certViewport.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    dragStartX = e.touches[0].clientX - certPanX;
+                    dragStartY = e.touches[0].clientY - certPanY;
+                    certViewport.classList.add('is-dragging');
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!isDragging || e.touches.length !== 1) return;
+                certPanX = e.touches[0].clientX - dragStartX;
+                certPanY = e.touches[0].clientY - dragStartY;
+                updateCertTransform(false);
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    certViewport.classList.remove('is-dragging');
+                }
+            });
+        }
+
+        // KEYBOARD SHORTCUTS
         document.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('cert-lightbox');
+            if (!modal || !modal.classList.contains('active')) return;
+
             if (e.key === 'Escape') {
-                closeCertLightbox();
+                closeCertViewer();
+            } else if (e.key === '+' || e.key === '=') {
+                zoomCert(0.25);
+            } else if (e.key === '-' || e.key === '_') {
+                zoomCert(-0.25);
+            } else if (e.key === '0') {
+                resetCertView();
+            } else if (e.key === ' ' || e.key.toLowerCase() === 'f') {
+                e.preventDefault();
+                flipCert3D();
             }
         });
     </script>
