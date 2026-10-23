@@ -15,7 +15,8 @@ Welcome to my personal portfolio website repository! This website showcases my p
 - 🌓 **Light & Dark Mode**: Seamless theme toggling with custom CSS variables and persistent preferences.
 - 🌐 **Bilingual (English / Bahasa Indonesia)**: Instant language switcher without page reload.
 - 📂 **Interactive Project Showcase**: Dynamic project preview modals with tech stack tags and links.
-- 📄 **Integrated Resume / CV Download**: Direct one-click download for my latest CV (`CV-Arta.pdf`).
+- 📜 **Interactive 3D Certificate Viewer**: Smooth 3D paper rotation, automatic landscape-to-portrait morphing, zoom, and pan.
+- 📄 **Integrated Resume / CV Download**: Direct one-click download for my latest CV (`assets/docs/CV-Arta.pdf`).
 - ⚡ **Zero Dependencies**: Pure Vanilla HTML5, CSS3, and JavaScript — lightning fast load times and optimal SEO.
 
 ---
