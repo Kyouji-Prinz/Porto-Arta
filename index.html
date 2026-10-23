@@ -820,20 +820,43 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(10, 13, 20, 0.94);
-            backdrop-filter: blur(14px);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             z-index: 99999;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 1.25rem;
             opacity: 0;
-            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .cert-lightbox-modal.active {
             display: flex;
-            opacity: 1;
+            animation: certBackdropFadeIn 0.35s ease forwards;
+        }
+
+        .cert-lightbox-modal.closing {
+            animation: certBackdropFadeOut 0.24s ease forwards;
+            pointer-events: none;
+        }
+
+        @keyframes certBackdropFadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes certBackdropFadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
         }
 
         .cert-lightbox-content {
@@ -844,17 +867,31 @@
             max-height: 880px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 24px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
-            animation: certZoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 35px 100px rgba(0, 0, 0, 0.45);
+            animation: certPopToUs 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transform-origin: center center;
+            will-change: transform, opacity;
         }
 
-        @keyframes certZoomIn {
-            from { transform: scale(0.94); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .cert-lightbox-modal.closing .cert-lightbox-content {
+            transform: scale(0.7) translateY(24px);
+            opacity: 0;
+            transition: transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease;
+        }
+
+        @keyframes certPopToUs {
+            0% {
+                opacity: 0;
+                transform: scale(0.6) translateY(32px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
 
         .cert-lightbox-header {
@@ -891,13 +928,13 @@
             text-overflow: ellipsis;
         }
 
-        /* Controls in Header */
+        /* Controls in Header (Clean Zoom & Reset) */
         .cert-toolbar-controls {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.25rem;
             background: rgba(0, 0, 0, 0.05);
-            padding: 0.3rem 0.55rem;
+            padding: 0.25rem 0.45rem;
             border-radius: 10px;
             border: 1px solid var(--border-color);
         }
@@ -931,44 +968,6 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        .cert-zoom-indicator {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-main);
-            min-width: 44px;
-            text-align: center;
-            user-select: none;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .cert-zoom-indicator:hover {
-            background: rgba(0, 0, 0, 0.06);
-        }
-
-        .btn-flip-primary {
-            background: #2563eb;
-            color: #fff;
-            border: 1px solid #1d4ed8;
-            padding: 0.42rem 0.9rem;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
-        }
-
-        .btn-flip-primary:hover {
-            background: #1d4ed8;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-        }
-
         .cert-lightbox-close {
             background: none;
             border: none;
@@ -978,7 +977,7 @@
             line-height: 1;
             padding: 0 0.4rem;
             border-radius: 6px;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease, color 0.2s ease;
         }
 
         .cert-lightbox-close:hover {
@@ -994,7 +993,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at center, #1e2430 0%, #0e1117 100%);
+            background: radial-gradient(circle at center, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.95) 100%);
             perspective: 1500px;
             cursor: grab;
             user-select: none;
@@ -1023,11 +1022,13 @@
             will-change: transform;
         }
 
-        /* 3D Paper Sheet (Flippable) */
+        /* 3D Paper Sheet (Flippable & Smooth Dimension Morphing) */
         .cert-paper-3d {
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.75s cubic-bezier(0.34, 1.25, 0.64, 1);
+            transition: transform 0.75s cubic-bezier(0.34, 1.25, 0.64, 1),
+                        width 0.75s cubic-bezier(0.34, 1.25, 0.64, 1),
+                        height 0.75s cubic-bezier(0.34, 1.25, 0.64, 1);
         }
 
         .cert-paper-3d.flipped {
@@ -1036,28 +1037,25 @@
 
         /* Orientation helper sizes */
         .cert-paper-3d.is-portrait {
-            height: min(62vh, 600px);
-            width: calc(min(62vh, 600px) * 0.707);
+            height: min(64vh, 620px);
+            width: calc(min(64vh, 620px) * 0.73);
         }
 
         .cert-paper-3d.is-landscape {
             height: min(58vh, 520px);
-            width: calc(min(58vh, 520px) * 1.414);
+            width: calc(min(58vh, 520px) * 1.38);
         }
 
         @media (max-width: 768px) {
             .cert-paper-3d.is-portrait {
                 width: 82vw;
-                height: calc(82vw / 0.707);
+                height: calc(82vw / 0.73);
                 max-height: 60vh;
             }
             .cert-paper-3d.is-landscape {
                 width: 88vw;
-                height: calc(88vw / 1.414);
+                height: calc(88vw / 1.38);
                 max-height: 55vh;
-            }
-            .cert-toolbar-controls {
-                gap: 0.2rem;
             }
         }
 
@@ -1539,9 +1537,9 @@
                             </div>
                         </div>
 
-                        <!-- CERTIFICATE 3: UKK Multimedia SMK (2-Sided, Landscape) -->
+                        <!-- CERTIFICATE 3: UKK Multimedia SMK (2-Sided, Landscape Front & Portrait Back) -->
                         <div class="cert-card">
-                            <div class="cert-media-wrap" onclick="openCertViewer('Sertif/Certif_Competency_Multimedia_Front.jpg', 'Certificate of Competency (UKK Multimedia)', 'SMKN 1 Jombang & Zona Grafika • Predikat Kompeten (88)', 'Sertif/Certif_Competency_Multimedia_Back.jpg', 'landscape')">
+                            <div class="cert-media-wrap" onclick="openCertViewer('Sertif/Certif_Competency_Multimedia_Front.jpg', 'Certificate of Competency (UKK Multimedia)', 'SMKN 1 Jombang & Zona Grafika • Predikat Kompeten (88)', 'Sertif/Certif_Competency_Multimedia_Back.jpg', 'mixed-flip')">
                                 <span class="cert-badge-category">Vocational UKK</span>
                                 <span class="cert-badge-grade">Kompeten (88)</span>
                                 <span class="cert-badge-sides">📄 2 Sisi</span>
@@ -1561,7 +1559,7 @@
                                 <p class="cert-desc lang-en">National vocational competency qualification in Multimedia (KKNI Level 2/3) accredited with industry partners, certified as <strong>KOMPETEN (Score 88)</strong>.</p>
                                 <p class="cert-desc lang-id">Sertifikasi Uji Kompetensi Keahlian (UKK) nasional jenjang SMK bidang Multimedia terakreditasi bersama mitra DUDI dengan predikat <strong>KOMPETEN (Nilai 88)</strong>.</p>
                                 <div class="cert-actions">
-                                    <button type="button" class="btn-cert-open" onclick="openCertViewer('Sertif/Certif_Competency_Multimedia_Front.jpg', 'Certificate of Competency (UKK Multimedia)', 'SMKN 1 Jombang & Zona Grafika • Predikat Kompeten (88)', 'Sertif/Certif_Competency_Multimedia_Back.jpg', 'landscape')">
+                                    <button type="button" class="btn-cert-open" onclick="openCertViewer('Sertif/Certif_Competency_Multimedia_Front.jpg', 'Certificate of Competency (UKK Multimedia)', 'SMKN 1 Jombang & Zona Grafika • Predikat Kompeten (88)', 'Sertif/Certif_Competency_Multimedia_Back.jpg', 'mixed-flip')">
                                         🔄 <span class="lang-en">View & 3D Flip (2 Sisi)</span><span class="lang-id">Buka & Balik 3D (2 Sisi)</span>
                                     </button>
                                 </div>
@@ -1617,15 +1615,11 @@
                     <div id="lightbox-subtitle" class="cert-lightbox-subtitle">Subtitle Info</div>
                 </div>
 
-                <!-- CONTROLS TOOLBAR -->
+                <!-- CONTROLS TOOLBAR (Clean Zoom & Reset) -->
                 <div class="cert-toolbar-controls">
-                    <button type="button" class="btn-cert-tool" id="btn-zoom-out" title="Perkecil (Zoom Out)" onclick="zoomCert(-0.25)">−</button>
-                    <div class="cert-zoom-indicator" id="cert-zoom-level" title="Klik untuk Reset Zoom" onclick="resetCertView()">100%</div>
-                    <button type="button" class="btn-cert-tool" id="btn-zoom-in" title="Perbesar (Zoom In)" onclick="zoomCert(0.25)">+</button>
-                    <button type="button" class="btn-cert-tool" id="btn-reset-view" title="Reset Posisi & Zoom" onclick="resetCertView()">↺</button>
-                    <button type="button" class="btn-flip-primary" id="btn-modal-flip" style="display: none;" onclick="flipCert3D()">
-                        <span>🔄</span> <span class="lang-en">Flip 3D</span><span class="lang-id">Balik 3D</span>
-                    </button>
+                    <button type="button" class="btn-cert-tool" id="btn-zoom-out" title="Perkecil / Zoom Out" onclick="zoomCert(-0.25)">−</button>
+                    <button type="button" class="btn-cert-tool" id="btn-zoom-in" title="Perbesar / Zoom In" onclick="zoomCert(0.25)">+</button>
+                    <button type="button" class="btn-cert-tool" id="btn-reset-view" title="Reset View" onclick="resetCertView()">↺</button>
                 </div>
 
                 <button type="button" class="cert-lightbox-close" onclick="closeCertViewer()" title="Tutup (Esc)">&times;</button>
@@ -1652,15 +1646,15 @@
             <div class="cert-lightbox-footer">
                 <div class="cert-page-tabs" id="lightbox-page-tabs" style="display: none;">
                     <button type="button" id="tab-btn-front" class="btn-tab-pill active" onclick="flipCert3D('front')">
-                        📄 <span class="lang-en">Front Cover</span><span class="lang-id">Halaman Depan</span>
+                        <span class="lang-en">Front Cover</span><span class="lang-id">Halaman Depan</span>
                     </button>
                     <button type="button" id="tab-btn-back" class="btn-tab-pill" onclick="flipCert3D('back')">
-                        📊 <span class="lang-en">Grades Transcript</span><span class="lang-id">Transkrip Nilai</span>
+                        <span class="lang-en">Grades Transcript</span><span class="lang-id">Transkrip Nilai</span>
                     </button>
                 </div>
                 <div class="cert-hint-text">
-                    💡 <span class="lang-en">Drag to pan • Scroll / +/- to zoom • Double click to toggle • Click Flip for 3D animation</span>
-                    <span class="lang-id">Drag untuk geser • Scroll / +/- untuk zoom • Klik dua kali toggle zoom • Klik Balik untuk rotasi 3D</span>
+                    <span class="lang-en">Drag to pan • Scroll to zoom</span>
+                    <span class="lang-id">Geser untuk melihat • Scroll untuk perbesar</span>
                 </div>
                 <button type="button" class="btn-tab-pill" onclick="closeCertViewer()" style="margin-left: auto;">
                     <span class="lang-en">Close</span><span class="lang-id">Tutup</span>
@@ -1999,10 +1993,10 @@
         let hasBackPage = false;
         let currentFrontUrl = '';
         let currentBackUrl = '';
+        let currentOrientationMode = 'landscape';
 
         function updateCertTransform(animate = false) {
             const stage = document.getElementById('cert-stage');
-            const zoomText = document.getElementById('cert-zoom-level');
             if (!stage) return;
             if (animate) {
                 stage.style.transition = 'transform 0.22s cubic-bezier(0.2, 0, 0, 1)';
@@ -2010,19 +2004,16 @@
                 stage.style.transition = 'none';
             }
             stage.style.transform = `translate(${certPanX}px, ${certPanY}px) scale(${certZoom})`;
-            if (zoomText) {
-                zoomText.textContent = `${Math.round(certZoom * 100)}%`;
-            }
         }
 
         window.openCertViewer = function(frontSrc, title, subtitle, backSrc = null, orientation = 'landscape') {
             const modal = document.getElementById('cert-lightbox');
+            const contentEl = modal ? modal.querySelector('.cert-lightbox-content') : null;
             const titleEl = document.getElementById('lightbox-title');
             const subEl = document.getElementById('lightbox-subtitle');
             const imgFront = document.getElementById('cert-img-front');
             const imgBack = document.getElementById('cert-img-back');
             const paper = document.getElementById('cert-paper-3d');
-            const flipBtn = document.getElementById('btn-modal-flip');
             const tabsDiv = document.getElementById('lightbox-page-tabs');
             const tabFront = document.getElementById('tab-btn-front');
             const tabBack = document.getElementById('tab-btn-back');
@@ -2030,6 +2021,7 @@
             currentFrontUrl = frontSrc;
             currentBackUrl = backSrc;
             hasBackPage = !!backSrc;
+            currentOrientationMode = orientation;
             isFlipped = false;
 
             // Reset pan and zoom
@@ -2049,7 +2041,7 @@
             titleEl.textContent = title;
             subEl.textContent = subtitle;
 
-            // Set paper orientation
+            // Set initial paper orientation
             paper.classList.remove('is-portrait', 'is-landscape', 'flipped');
             if (orientation === 'portrait') {
                 paper.classList.add('is-portrait');
@@ -2059,15 +2051,21 @@
 
             // Show or hide 3D flip controls
             if (hasBackPage) {
-                flipBtn.style.display = 'inline-flex';
                 tabsDiv.style.display = 'flex';
-                tabFront.classList.add('active');
-                tabBack.classList.remove('active');
+                if (tabFront) tabFront.classList.add('active');
+                if (tabBack) tabBack.classList.remove('active');
             } else {
-                flipBtn.style.display = 'none';
                 tabsDiv.style.display = 'none';
             }
 
+            // Re-trigger entrance pop animation cleanly
+            if (contentEl) {
+                contentEl.style.animation = 'none';
+                contentEl.offsetHeight; // trigger reflow
+                contentEl.style.animation = '';
+            }
+
+            modal.classList.remove('closing');
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         };
@@ -2093,10 +2091,20 @@
 
             if (isFlipped) {
                 paper.classList.add('flipped');
+                if (currentOrientationMode === 'mixed-flip') {
+                    // Smoothly morph dimension from landscape to portrait
+                    paper.classList.remove('is-landscape');
+                    paper.classList.add('is-portrait');
+                }
                 if (tabBack) tabBack.classList.add('active');
                 if (tabFront) tabFront.classList.remove('active');
             } else {
                 paper.classList.remove('flipped');
+                if (currentOrientationMode === 'mixed-flip') {
+                    // Smoothly morph dimension from portrait back to landscape
+                    paper.classList.remove('is-portrait');
+                    paper.classList.add('is-landscape');
+                }
                 if (tabFront) tabFront.classList.add('active');
                 if (tabBack) tabBack.classList.remove('active');
             }
@@ -2117,21 +2125,28 @@
 
         window.closeCertViewer = function() {
             const modal = document.getElementById('cert-lightbox');
-            if (modal) {
-                modal.classList.remove('active');
-            }
-            document.body.style.overflow = 'auto';
+            if (!modal) return;
+            modal.classList.add('closing');
+            setTimeout(() => {
+                modal.classList.remove('active', 'closing');
+                document.body.style.overflow = 'auto';
+            }, 230);
         };
 
         window.closeCertLightbox = window.closeCertViewer;
 
-        // Viewport Drag and Wheel interactions
+        // Viewport Drag, Zoom, and Direct Tap interactions
         const certViewport = document.getElementById('cert-viewport');
         if (certViewport) {
-            // MOUSE DRAG (PAN)
+            let mouseStartX = 0;
+            let mouseStartY = 0;
+
+            // MOUSE DRAG (PAN) & TAP TO FLIP
             certViewport.addEventListener('mousedown', (e) => {
                 if (e.target.closest('button') || e.target.closest('.cert-toolbar-controls')) return;
                 isDragging = true;
+                mouseStartX = e.clientX;
+                mouseStartY = e.clientY;
                 dragStartX = e.clientX - certPanX;
                 dragStartY = e.clientY - certPanY;
                 certViewport.classList.add('is-dragging');
@@ -2144,10 +2159,15 @@
                 updateCertTransform(false);
             });
 
-            window.addEventListener('mouseup', () => {
+            window.addEventListener('mouseup', (e) => {
                 if (isDragging) {
                     isDragging = false;
                     certViewport.classList.remove('is-dragging');
+                    const movedDist = Math.hypot(e.clientX - mouseStartX, e.clientY - mouseStartY);
+                    // If not dragged and clicked on the 3D paper, flip smoothly
+                    if (movedDist < 6 && e.target.closest('#cert-paper-3d') && hasBackPage) {
+                        flipCert3D();
+                    }
                 }
             });
 
@@ -2169,10 +2189,15 @@
                 }
             });
 
-            // TOUCH SUPPORT (Mobile & Tablet)
+            // TOUCH SUPPORT (Mobile & Tablet: Pan, Tap Flip)
+            let touchStartX = 0;
+            let touchStartY = 0;
+
             certViewport.addEventListener('touchstart', (e) => {
                 if (e.touches.length === 1) {
                     isDragging = true;
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
                     dragStartX = e.touches[0].clientX - certPanX;
                     dragStartY = e.touches[0].clientY - certPanY;
                     certViewport.classList.add('is-dragging');
@@ -2186,10 +2211,16 @@
                 updateCertTransform(false);
             }, { passive: true });
 
-            window.addEventListener('touchend', () => {
+            window.addEventListener('touchend', (e) => {
                 if (isDragging) {
                     isDragging = false;
                     certViewport.classList.remove('is-dragging');
+                    if (e.changedTouches.length === 1) {
+                        const touchDist = Math.hypot(e.changedTouches[0].clientX - touchStartX, e.changedTouches[0].clientY - touchStartY);
+                        if (touchDist < 8 && e.target.closest('#cert-paper-3d') && hasBackPage) {
+                            flipCert3D();
+                        }
+                    }
                 }
             });
         }
