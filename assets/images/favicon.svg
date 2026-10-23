@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="favBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="artaGradBlue" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="60%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="artaGradWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+  </defs>
+  <!-- Sleek Squircle Container -->
+  <rect width="128" height="128" rx="28" fill="url(#favBg)"/>
+  <rect width="128" height="128" rx="28" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+  <!-- Centered Logo Mark -->
+  <g transform="translate(14, 14)">
+    <path d="M52.58 14.52 L11.94 84.84 L29.35 84.84 L60.32 63.55 L65.48 50.65 L33.87 68.71 L51.29 38.39 L59.68 50.0 L67.42 41.61 Z" fill="url(#artaGradBlue)"/>
+    <path d="M70.65 46.77 L66.13 60.32 L80.32 84.84 L89.35 84.84 L89.35 78.39 Z" fill="url(#artaGradWhite)"/>
+  </g>
+</svg>
